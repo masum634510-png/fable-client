@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
+import ThemeToggle from './ThemeToggle';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
@@ -30,6 +31,7 @@ export default function Navbar() {
             <li><Link href="/register" className={styles.registerBtn}>Register</Link></li>
           </>
         )}
+        <li><ThemeToggle /></li>
       </ul>
     </nav>
   );
