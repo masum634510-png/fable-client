@@ -1,239 +1,323 @@
+/* Ebook Detail Page Styles */
+
 .container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 4rem 5%;
+  padding: 3rem 2rem;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1.5fr;
   gap: 3rem;
-  background-color: var(--background);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  align-items: start;
 }
 
-[data-theme='dark'] .grid {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-@media (min-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr 1.5fr;
-    padding: 3rem;
-  }
-}
-
+/* Cover Image Column */
 .imageCol {
-  display: flex;
-  justify-content: center;
+  position: sticky;
+  top: 80px;
 }
 
 .imageWrapper {
   position: relative;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 .imageWrapper img {
   width: 100%;
   height: auto;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
   display: block;
+  object-fit: cover;
 }
 
 .soldBadge {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  background-color: #ef4444;
-  color: white;
+  top: 16px;
+  right: 16px;
+  background: #ef4444;
+  color: #fff;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 24px;
   font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+  font-size: 0.85rem;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
+/* Info Column */
 .infoCol {
   display: flex;
   flex-direction: column;
+  gap: 1.25rem;
 }
 
 .headerInfo {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .genre {
-  background-color: var(--secondary);
+  background: rgba(99, 102, 241, 0.1);
   color: var(--primary);
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  padding: 0.35rem 1rem;
+  border-radius: 24px;
+  font-size: 0.85rem;
   font-weight: 600;
-  font-size: 0.9rem;
 }
 
 .date {
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  opacity: 0.6;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   font-weight: 800;
-  color: var(--foreground);
-  margin-bottom: 0.5rem;
   line-height: 1.2;
+  color: var(--foreground);
 }
 
 .writer {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 1.5rem;
+  font-size: 1rem;
+  opacity: 0.7;
 }
 
 .writerName {
   color: var(--primary);
   font-weight: 600;
-  cursor: pointer;
 }
 
+/* Price Section */
 .priceContainer {
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 
 .priceLabel {
-  font-size: 1.2rem;
-  color: var(--text-muted);
+  font-size: 0.9rem;
+  opacity: 0.6;
+  font-weight: 500;
 }
 
 .price {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
-  color: var(--foreground);
+  color: var(--primary);
 }
 
+/* Description */
 .description {
-  margin-bottom: 3rem;
+  margin-top: 0.5rem;
 }
 
 .description h3 {
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-  color: var(--foreground);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
 }
 
 .description p {
-  color: var(--text-muted);
-  line-height: 1.7;
-  font-size: 1.05rem;
+  font-size: 1rem;
+  line-height: 1.75;
+  opacity: 0.8;
 }
 
+/* Action Buttons */
 .actions {
   display: flex;
   gap: 1rem;
-  margin-top: auto;
-}
-
-.purchaseBtn, .purchasedBtn {
-  flex: 2;
-  padding: 1.2rem;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
 .purchaseBtn {
-  background-color: var(--primary);
-  color: white;
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+  background: var(--primary);
+  color: #ffffff;
+  padding: 0.9rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
 }
 
-.purchaseBtn:not(:disabled):hover {
-  background-color: var(--primary-hover);
+.purchaseBtn:hover:not(:disabled) {
+  background: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
 }
 
 .purchaseBtn:disabled {
-  background-color: var(--border);
-  color: var(--text-muted);
+  opacity: 0.5;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
-.purchasedBtn {
-  background-color: #10b981;
-  color: white;
-  cursor: default;
+.purchasedTag {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .bookmarkBtn {
-  flex: 1;
-  padding: 1.2rem;
-  background-color: transparent;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  background: transparent;
+  border: 1px solid var(--border);
   color: var(--foreground);
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .bookmarkBtn:hover {
-  background-color: var(--secondary);
-  border-color: var(--secondary);
-  color: var(--primary);
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(236, 72, 153, 0.05);
 }
 
-.loadingContainer, .errorContainer {
+.bookmarkedBtn {
+  background: rgba(236, 72, 153, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  color: var(--accent);
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bookmarkedBtn:hover {
+  background: rgba(236, 72, 153, 0.15);
+}
+
+/* Read Section */
+.readSection {
+  margin-top: 3rem;
+  border-top: 2px solid var(--border);
+  padding-top: 2rem;
+}
+
+.readSection h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.contentBox {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.paragraph {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  margin-bottom: 1.25rem;
+  color: var(--foreground);
+  opacity: 0.9;
+}
+
+/* Loading States */
+.loadingContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 60vh;
-  text-align: center;
+  gap: 1rem;
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid var(--secondary);
-  border-top-color: var(--primary);
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--border);
+  border-top: 4px solid var(--primary);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  text-align: center;
+}
+
+.errorContainer h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ef4444;
 }
 
 .backBtn {
-  margin-top: 1rem;
-  padding: 0.8rem 1.5rem;
-  background-color: var(--primary);
-  color: white;
+  background: var(--primary);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.backBtn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .imageCol {
+    position: static;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .price {
+    font-size: 1.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .contentBox {
+    padding: 1.5rem;
+  }
 }
