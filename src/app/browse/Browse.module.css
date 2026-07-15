@@ -1,245 +1,319 @@
+/* Browse Ebooks Page Styles */
+
 .container {
   display: flex;
-  flex-direction: column;
-  padding: 2rem 5%;
-  gap: 2rem;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 2rem;
+  gap: 2rem;
+  min-height: 80vh;
 }
 
-@media (min-width: 768px) {
-  .container {
-    flex-direction: row;
-  }
-}
-
+/* Sidebar Filter Section */
 .sidebar {
-  flex: 0 0 280px;
-  background-color: var(--background);
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 1.5rem;
   height: fit-content;
+  position: sticky;
+  top: 80px;
 }
 
 .sidebar h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
   margin-bottom: 1.5rem;
   color: var(--primary);
-  border-bottom: 2px solid var(--secondary);
-  padding-bottom: 0.5rem;
 }
 
 .filterForm {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.25rem;
 }
 
 .filterGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .filterGroup label {
+  font-size: 0.85rem;
   font-weight: 600;
-  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
-.filterGroup input, .filterGroup select {
-  padding: 0.7rem;
+.filterGroup input,
+.filterGroup select {
+  padding: 0.65rem 0.8rem;
   border: 1px solid var(--border);
-  border-radius: 6px;
-  background-color: var(--background);
+  border-radius: 8px;
+  background: var(--background);
   color: var(--foreground);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.filterGroup input:focus,
+.filterGroup select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
 .priceInputs {
   display: flex;
-  align-items: center;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .priceInputs input {
-  width: 100%;
+  flex: 1;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.priceInputs input:focus {
+  border-color: var(--primary);
+}
+
+.priceInputs span {
+  font-weight: bold;
+  opacity: 0.5;
 }
 
 .applyBtn {
-  background-color: var(--primary);
-  color: white;
-  padding: 0.8rem;
+  background: var(--primary);
+  color: #ffffff;
   border: none;
-  border-radius: 6px;
+  padding: 0.7rem;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 1rem;
+  transition: all 0.3s ease;
 }
 
 .applyBtn:hover {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .clearBtn {
-  background-color: transparent;
-  color: var(--text-muted);
-  padding: 0.8rem;
+  background: transparent;
   border: 1px solid var(--border);
-  border-radius: 6px;
-  font-weight: 600;
+  color: var(--foreground);
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
 .clearBtn:hover {
-  background-color: var(--border);
-  color: var(--foreground);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
+/* Main Content Area */
 .mainContent {
   flex: 1;
 }
 
 .mainContent h2 {
-  font-size: 2rem;
+  font-size: 1.75rem;
+  font-weight: 700;
   margin-bottom: 1.5rem;
-  color: var(--foreground);
 }
 
+/* Ebook Grid */
 .ebookGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.75rem;
 }
 
 .ebookCard {
-  background-color: var(--background);
+  background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+}
+
+.ebookCard:hover {
+  border-color: var(--primary);
 }
 
 .imageWrapper {
   position: relative;
-  height: 300px;
-  width: 100%;
-  background-color: var(--secondary);
+  overflow: hidden;
 }
 
 .imageWrapper img {
   width: 100%;
-  height: 100%;
+  height: 260px;
   object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.ebookCard:hover .imageWrapper img {
+  transform: scale(1.05);
 }
 
 .soldBadge {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #ef4444;
-  color: white;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: bold;
+  top: 12px;
+  right: 12px;
+  background: #ef4444;
+  color: #fff;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .cardInfo {
-  padding: 1.2rem;
-  flex: 1;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
+  gap: 0.4rem;
 }
 
 .cardInfo h4 {
   font-size: 1.1rem;
-  margin-bottom: 0.3rem;
-  line-height: 1.3;
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .author {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
 }
 
 .cardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;
+  margin-top: 0.5rem;
 }
 
 .genre {
-  background-color: var(--secondary);
-  color: var(--primary);
-  padding: 0.3rem 0.6rem;
+  background: var(--secondary);
+  padding: 0.25rem 0.7rem;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
 }
 
 .price {
-  font-weight: bold;
   font-size: 1.1rem;
-  color: var(--foreground);
+  font-weight: 700;
+  color: var(--primary);
 }
 
+/* Loading Skeleton */
 .loadingGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.75rem;
 }
 
 .skeletonCard {
-  height: 400px;
-  background: linear-gradient(90deg, var(--border) 25%, var(--secondary) 50%, var(--border) 75%);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  height: 380px;
+  animation: shimmer 1.5s infinite;
+  background: linear-gradient(90deg, var(--card-bg) 25%, var(--secondary) 50%, var(--card-bg) 75%);
   background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 12px;
 }
 
-@keyframes loading {
+@keyframes shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+/* Error & No Results */
+.error {
+  text-align: center;
+  padding: 3rem;
+  color: #ef4444;
+  font-weight: 600;
 }
 
 .noResults {
   text-align: center;
   padding: 4rem 2rem;
-  background-color: var(--secondary);
-  border-radius: 12px;
-  color: var(--text-muted);
+  font-size: 1.1rem;
+  opacity: 0.7;
 }
 
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-top: 3rem;
+  margin-top: 2.5rem;
+  padding: 1rem 0;
 }
 
 .pageBtn {
   padding: 0.6rem 1.2rem;
-  background-color: var(--background);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--foreground);
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
-.pageBtn:not(:disabled):hover {
-  background-color: var(--primary);
-  color: white;
+.pageBtn:hover:not(:disabled) {
+  background: var(--primary);
+  color: #fff;
   border-color: var(--primary);
 }
 
 .pageBtn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+}
+
+.pageInfo {
+  font-weight: 600;
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .sidebar {
+    width: 100%;
+    position: static;
+  }
+  
+  .ebookGrid,
+  .loadingGrid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
 }
