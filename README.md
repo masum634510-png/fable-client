@@ -3,7 +3,7 @@
 This is the Next.js frontend for the Fable Ebook Sharing Platform.
 
 ## Live URL
-[https://fable-client-eight-delta.vercel.app](https://fable-client-eight-delta.vercel.app)
+[https://fable-client-two.vercel.app](https://fable-client-two.vercel.app)
 
 ## Purpose
 Fable connects ebook lovers with writers in a premium, modern digital platform.
