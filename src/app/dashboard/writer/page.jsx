@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import styles from '../Dashboard.module.css';
+import Link from 'next/link';
 import { API_URL } from '../../../utils/api';
 
 export default function WriterDashboard() {
@@ -191,6 +192,28 @@ export default function WriterDashboard() {
     }
   };
 
+  const handlePurchase = async (ebookId) => {
+    try {
+      const res = await fetch(`${API_URL}/api/transactions/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`
+        },
+        body: JSON.stringify({ ebookId })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (err) {
+      alert(err.message || 'Purchase failed');
+    }
+  };
+
   if (authLoading || loading) return <div className={styles.loading}>Loading Writer Dashboard...</div>;
 
   return (
@@ -288,15 +311,50 @@ export default function WriterDashboard() {
               <p>No bookmarked ebooks.</p>
             ) : (
               <div className={styles.cardGrid}>
-                {profileData.wishlist.map(ebook => (
-                  <a href={`/ebook/${ebook._id}`} key={ebook._id} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', background: 'var(--card-bg)', transition: 'all 0.3s' }}>
-                      <img src={ebook.coverImage} alt="Cover" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '8px' }} />
-                      <h4 style={{ marginTop: '1rem', fontSize: '1.1rem', fontWeight: 'bold' }}>{ebook.title}</h4>
-                      <p style={{ color: 'var(--primary)', marginTop: '0.5rem', fontSize: '0.9rem', fontWeight: '600' }}>View Book Detail</p>
-                    </div>
-                  </a>
-                ))}
+                {profileData.wishlist.map(ebook => {
+                  const isPurchased = profileData.purchasedEbooks?.some(b => (b._id || b) === ebook._id);
+                  const isWriter = ebook.writer === user._id || ebook.writer?._id === user._id;
+
+                  return (
+                    <Link href={`/ebook/${ebook._id}`} key={ebook._id}>
+                      <div style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', background: 'var(--card-bg)', transition: 'all 0.3s', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <img src={ebook.coverImage} alt="Cover" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '8px' }} />
+                        <h4 style={{ marginTop: '1rem', fontSize: '1.1rem', fontWeight: 'bold', flexGrow: 1 }}>{ebook.title}</h4>
+                        {isPurchased ? (
+                          <span style={{ display: 'block', textAlign: 'center', marginTop: '0.8rem', background: '#22c55e', color: '#fff', padding: '0.5rem', borderRadius: '6px', fontSize: '0.9rem', fontWeight: 'bold' }}>
+                            Purchased
+                          </span>
+                        ) : isWriter ? (
+                          <span style={{ display: 'block', textAlign: 'center', marginTop: '0.8rem', background: '#64748b', color: '#fff', padding: '0.5rem', borderRadius: '6px', fontSize: '0.9rem', fontWeight: 'bold' }}>
+                            My Book
+                          </span>
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handlePurchase(ebook._id);
+                            }}
+                            disabled={ebook.status === 'sold'}
+                            style={{
+                              marginTop: '0.8rem',
+                              background: ebook.status === 'sold' ? '#cbd5e1' : 'var(--primary)',
+                              color: '#fff',
+                              border: 'none',
+                              padding: '0.5rem 1rem',
+                              borderRadius: '6px',
+                              cursor: ebook.status === 'sold' ? 'not-allowed' : 'pointer',
+                              fontWeight: '600',
+                              width: '100%'
+                            }}
+                          >
+                            {ebook.status === 'sold' ? 'Sold Out' : `Buy Now ($${ebook.price})`}
+                          </button>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>

@@ -7,7 +7,17 @@ import { API_URL } from '../utils/api';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('fable_user');
+      try {
+        return storedUser ? JSON.parse(storedUser) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -33,6 +43,8 @@ export const AuthProvider = ({ children }) => {
           localStorage.removeItem('fable_user');
           setUser(null);
         }
+      } else {
+        setUser(null);
       }
       setLoading(false);
     };
