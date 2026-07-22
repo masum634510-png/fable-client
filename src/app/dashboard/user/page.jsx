@@ -23,14 +23,15 @@ export default function UserDashboard() {
   const [purchasesLoading, setPurchasesLoading] = useState(true);
 
   const fetchProfile = async () => {
+    if (!user?.token) return;
     try {
       const res = await fetch(`${API_URL}/api/users/profile`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
-      const data = await res.json();
       if (res.ok) {
+        const data = await res.json();
         setProfileData(data);
-        setFullName(data.fullName);
+        setFullName(data.fullName || '');
       }
     } catch (err) {
       console.error(err);
@@ -38,13 +39,14 @@ export default function UserDashboard() {
   };
 
   const fetchPurchases = async () => {
+    if (!user?.token) return;
     try {
       const res = await fetch(`${API_URL}/api/transactions/my-purchases`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
-      const data = await res.json();
       if (res.ok) {
-        setPurchases(data);
+        const data = await res.json();
+        setPurchases(Array.isArray(data) ? data : []);
       }
     } catch (err) {
       console.error(err);

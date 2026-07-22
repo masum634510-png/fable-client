@@ -14,10 +14,10 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-gray-200/80 dark:border-slate-800/80 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 items-center h-16">
           
-          {/* Brand Logo */}
-          <div className="flex items-center">
+          {/* SECTION 1 (LEFT): Brand Logo */}
+          <div className="flex items-center justify-start">
             <Link href="/" className="group flex items-center gap-3 font-extrabold text-2xl transition">
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 group-hover:shadow-indigo-500/40 transition-all duration-300">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,13 +35,13 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-2">
+          {/* SECTION 2 (CENTER): Main Navigation Links */}
+          <div className="hidden md:flex items-center justify-center space-x-2">
             <Link 
               href="/" 
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 pathname === '/' 
-                  ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-semibold shadow-sm' 
+                  ? 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 font-semibold shadow-sm' 
                   : 'text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-slate-900'
               }`}
             >
@@ -52,51 +52,54 @@ export default function Navbar() {
               href="/browse" 
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 pathname.startsWith('/browse') 
-                  ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-semibold shadow-sm' 
+                  ? 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 font-semibold shadow-sm' 
                   : 'text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-slate-900'
               }`}
             >
               Browse Ebooks
             </Link>
-            
+
+            {user && (
+              <Link 
+                href={`/dashboard/${user.role}`} 
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  pathname.startsWith('/dashboard') 
+                    ? 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 font-semibold shadow-sm' 
+                    : 'text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-slate-900'
+                }`}
+              >
+                Dashboard
+              </Link>
+            )}
+          </div>
+
+          {/* SECTION 3 (RIGHT): User Actions / Authentication / Theme Toggle */}
+          <div className="hidden md:flex items-center justify-end space-x-3">
             {user ? (
               <>
-                <Link 
-                  href={`/dashboard/${user.role}`} 
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    pathname.startsWith('/dashboard') 
-                      ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-semibold shadow-sm' 
-                      : 'text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-slate-900'
-                  }`}
-                >
-                  Dashboard
-                </Link>
-
-                <div className="flex items-center gap-3 pl-3 ml-2 border-l border-gray-200 dark:border-slate-800">
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-slate-800">
-                    <img 
-                      src={user.profilePicture || "https://api.dicebear.com/7.x/avataaars/svg?seed=User"} 
-                      alt={user.fullName} 
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
-                    <span className="text-xs font-semibold text-gray-800 dark:text-gray-200 max-w-[100px] truncate">
-                      {user.fullName}
-                    </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-bold capitalize">
-                      {user.role}
-                    </span>
-                  </div>
-
-                  <button 
-                    onClick={logout} 
-                    className="px-3.5 py-1.5 rounded-full border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500 hover:text-white font-medium transition text-xs cursor-pointer"
-                  >
-                    Logout
-                  </button>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-slate-900 border border-gray-200 dark:border-slate-800">
+                  <img 
+                    src={user.profilePicture || "https://api.dicebear.com/7.x/avataaars/svg?seed=User"} 
+                    alt={user.fullName} 
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                  <span className="text-xs font-semibold text-gray-800 dark:text-gray-200 max-w-[90px] truncate">
+                    {user.fullName}
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-bold capitalize">
+                    {user.role}
+                  </span>
                 </div>
+
+                <button 
+                  onClick={logout} 
+                  className="px-3.5 py-1.5 rounded-full border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500 hover:text-white font-medium transition text-xs cursor-pointer"
+                >
+                  Logout
+                </button>
               </>
             ) : (
-              <div className="flex items-center gap-3 pl-3 ml-2 border-l border-gray-200 dark:border-slate-800">
+              <>
                 <Link 
                   href="/login" 
                   className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium text-sm transition px-3 py-2"
@@ -109,16 +112,16 @@ export default function Navbar() {
                 >
                   Register
                 </Link>
-              </div>
+              </>
             )}
             
-            <div className="pl-3">
+            <div className="pl-1">
               <ThemeToggle />
             </div>
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Mobile Menu Toggle (Right Side Mobile) */}
+          <div className="flex items-center justify-end gap-2 md:hidden">
             <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -134,6 +137,7 @@ export default function Navbar() {
               </svg>
             </button>
           </div>
+
         </div>
       </div>
 

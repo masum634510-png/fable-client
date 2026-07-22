@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
           });
           if (res.ok) {
             const profileData = await res.json();
-            setUser({ ...parsed, ...profileData });
+            setUser({ ...parsed, ...profileData, token: parsed.token });
           } else {
             localStorage.removeItem('fable_user');
             setUser(null);
