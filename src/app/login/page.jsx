@@ -9,7 +9,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showGoogleModal, setShowGoogleModal] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
   const { login, loginWithGoogle } = useAuth();
 
   const handleSubmit = async (e) => {
@@ -21,33 +21,29 @@ export default function Login() {
     }
   };
 
-  const triggerGoogleLogin = async (roleType = 'user') => {
+  const handleGoogleLogin = async () => {
     try {
-      const email = roleType === 'writer' ? 'google_writer@fable.com' : 'google_reader@fable.com';
-      const name = roleType === 'writer' ? 'Google Writer' : 'Google Reader';
-      
+      setLoadingGoogle(true);
+      setError('');
       await loginWithGoogle({
-        email,
-        name,
-        googleId: `google_${roleType}_123456`,
-        picture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${roleType}`,
-        role: roleType
+        email: 'google_user@fable.com',
+        name: 'Google User',
+        googleId: 'google_user_123456',
+        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=google_user',
+        role: 'user'
       });
-      setShowGoogleModal(false);
     } catch (err) {
       setError(err.message || 'Google Login failed');
+    } finally {
+      setLoadingGoogle(false);
     }
-  };
-
-  const handleGoogleLogin = () => {
-    setShowGoogleModal(true);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.formCard}>
         <h2>Welcome Back to Fable</h2>
-        <p className={styles.subtitle}>Login to continue reading</p>
+        <p className={styles.subtitle}>Login to continue reading your favorite ebooks</p>
         
         {error && <div className={styles.error}>{error}</div>}
 
@@ -58,6 +54,7 @@ export default function Login() {
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
+              placeholder="admin@fable.com or your email"
               required 
             />
           </div>
@@ -67,6 +64,7 @@ export default function Login() {
               type="password" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
+              placeholder="••••••••"
               required 
             />
           </div>
@@ -75,67 +73,25 @@ export default function Login() {
 
         <div className={styles.divider}><span>OR</span></div>
         
-        <button onClick={handleGoogleLogin} className={styles.googleBtn}>
-          Continue with Google
+        <button 
+          onClick={handleGoogleLogin} 
+          disabled={loadingGoogle}
+          className={styles.googleBtn}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          {loadingGoogle ? 'Signing in with Google...' : 'Continue with Google'}
         </button>
 
         <p className={styles.footerText}>
           Don't have an account? <Link href="/register">Register here</Link>
         </p>
       </div>
-
-      {showGoogleModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)'
-        }}>
-          <div style={{
-            backgroundColor: 'var(--card-bg, #fff)', border: '1px solid var(--border)',
-            borderRadius: '16px', padding: '2rem', maxWidth: '400px', width: '90%',
-            display: 'flex', flexDirection: 'column', gap: '1.2rem', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
-            color: 'var(--foreground)'
-          }}>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', textAlign: 'center' }}>BetterAuth Google Account</h3>
-            <p style={{ fontSize: '0.9rem', opacity: 0.8, textAlign: 'center', marginBottom: '0.5rem' }}>Select a simulated Google Account to sign-in instantly:</p>
-            
-            <button 
-              onClick={() => triggerGoogleLogin('user')}
-              style={{
-                background: 'var(--secondary)', color: 'var(--foreground)', padding: '1rem',
-                borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer',
-                fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.8rem',
-                textAlign: 'left'
-              }}
-            >
-              <span>👤</span> Google Reader (Reader Role)
-            </button>
-            
-            <button 
-              onClick={() => triggerGoogleLogin('writer')}
-              style={{
-                background: 'var(--secondary)', color: 'var(--foreground)', padding: '1rem',
-                borderRadius: '8px', border: '1px solid var(--border)', cursor: 'pointer',
-                fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.8rem',
-                textAlign: 'left'
-              }}
-            >
-              <span>✍️</span> Google Writer (Writer Role)
-            </button>
-            
-            <button 
-              onClick={() => setShowGoogleModal(false)}
-              style={{
-                background: 'transparent', color: 'red', border: 'none',
-                cursor: 'pointer', fontSize: '0.9rem', fontWeight: '600', marginTop: '0.5rem',
-                alignSelf: 'center'
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
