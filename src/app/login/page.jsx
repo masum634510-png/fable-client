@@ -21,7 +21,7 @@ export default function Login() {
     }
   };
 
-  const triggerGoogleLogin = async (roleType) => {
+  const triggerGoogleLogin = async (roleType = 'user') => {
     try {
       const email = roleType === 'writer' ? 'google_writer@fable.com' : 'google_reader@fable.com';
       const name = roleType === 'writer' ? 'Google Writer' : 'Google Reader';
@@ -30,7 +30,8 @@ export default function Login() {
         email,
         name,
         googleId: `google_${roleType}_123456`,
-        picture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${roleType}`
+        picture: `https://api.dicebear.com/7.x/avataaars/svg?seed=${roleType}`,
+        role: roleType
       });
       setShowGoogleModal(false);
     } catch (err) {
