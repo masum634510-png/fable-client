@@ -31,10 +31,16 @@ export default function UserDashboard() {
       if (res.ok) {
         const data = await res.json();
         setProfileData(data);
-        setFullName(data.fullName || '');
+        setFullName(data.fullName || user.fullName || '');
+      } else {
+        // Fallback to auth user if endpoint returns non-ok
+        setProfileData(user);
+        setFullName(user.fullName || '');
       }
     } catch (err) {
       console.error(err);
+      setProfileData(user);
+      setFullName(user?.fullName || '');
     }
   };
 
@@ -84,7 +90,6 @@ export default function UserDashboard() {
 
       if (data.success) {
         const imageUrl = data.data.url;
-        // Save automatically to profile or state
         await updateProfile(fullName, imageUrl);
         alert('Profile picture updated successfully!');
       } else {
@@ -110,7 +115,7 @@ export default function UserDashboard() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${user?.token}`
         },
         body: JSON.stringify(bodyData)
       });
@@ -118,7 +123,6 @@ export default function UserDashboard() {
       const data = await res.json();
       if (res.ok) {
         setProfileData({ ...profileData, ...data });
-        // Update user state partially if possible, or refetch
         fetchProfile();
       } else {
         alert(data.message || 'Failed to update profile');
@@ -143,7 +147,7 @@ export default function UserDashboard() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`
+          Authorization: `Bearer ${user?.token}`
         },
         body: JSON.stringify({ ebookId })
       });
@@ -159,7 +163,12 @@ export default function UserDashboard() {
     }
   };
 
-  if (authLoading || !profileData) return <div className={styles.loading}>Loading Reader Dashboard...</div>;
+  if (authLoading) return <div className={styles.loading}>Loading Reader Dashboard...</div>;
+
+  const currentProfile = profileData || user || {};
+  const avatarUrl = currentProfile.profilePicture || user?.profilePicture || "https://api.dicebear.com/7.x/avataaars/svg?seed=User";
+  const userPurchasedEbooks = Array.isArray(currentProfile.purchasedEbooks) ? currentProfile.purchasedEbooks : [];
+  const userWishlist = Array.isArray(currentProfile.wishlist) ? currentProfile.wishlist : [];
 
   return (
     <div className={styles.dashboardContainer}>
@@ -197,7 +206,7 @@ export default function UserDashboard() {
             <div className={styles.header}><h2>My Profile</h2></div>
             <div className={styles.profileCard}>
               <div className={styles.avatarWrapper} style={{ position: 'relative', display: 'inline-block' }}>
-                <img src={profileData.profilePicture} alt="Avatar" className={styles.avatar} />
+                <img src={avatarUrl} alt="Avatar" className={styles.avatar} />
                 <label className={styles.uploadOverlay} style={{
                   position: 'absolute', bottom: '0', right: '0', background: 'var(--primary)',
                   borderRadius: '50%', width: '36px', height: '36px', display: 'flex',
@@ -225,7 +234,7 @@ export default function UserDashboard() {
                     <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem' }}>Email Address</label>
                     <input 
                       type="email" 
-                      value={profileData.email} 
+                      value={currentProfile.email || user?.email || ''} 
                       disabled
                       style={{ padding: '0.6rem', width: '100%', borderRadius: '6px', border: '1px solid var(--border)', background: 'var(--secondary)', opacity: '0.7', cursor: 'not-allowed' }}
                     />
@@ -240,7 +249,7 @@ export default function UserDashboard() {
 
                 <div style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--foreground)', opacity: '0.7' }}>
                   <p>Role: Reader</p>
-                  <p>Member Since: {new Date(profileData.createdAt).toLocaleDateString()}</p>
+                  <p>Member Since: {currentProfile.createdAt ? new Date(currentProfile.createdAt).toLocaleDateString() : 'Active Reader'}</p>
                 </div>
               </div>
             </div>
@@ -250,11 +259,11 @@ export default function UserDashboard() {
         {activeTab === 'purchases' && (
           <div>
             <div className={styles.header}><h2>My Library</h2></div>
-            {profileData.purchasedEbooks?.length === 0 ? (
+            {userPurchasedEbooks.length === 0 ? (
               <p>You haven't purchased any ebooks yet. <Link href="/browse" style={{ color: 'var(--primary)' }}>Browse Ebooks</Link></p>
             ) : (
               <div className={styles.cardGrid}>
-                {profileData.purchasedEbooks.map(ebook => (
+                {userPurchasedEbooks.map(ebook => (
                   <Link href={`/ebook/${ebook._id}`} key={ebook._id}>
                     <div style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', background: 'var(--card-bg)', transition: 'all 0.3s' }}>
                       <img src={ebook.coverImage} alt="Cover" style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '8px' }} />
@@ -292,8 +301,8 @@ export default function UserDashboard() {
                       <tr key={purchase._id}>
                         <td style={{ fontWeight: 'bold' }}>{purchase.ebook?.title || 'Unknown Ebook'}</td>
                         <td>{purchase.ebook?.writer?.fullName || 'Anonymous'}</td>
-                        <td>${purchase.amount.toFixed(2)}</td>
-                        <td>{new Date(purchase.createdAt).toLocaleDateString()}</td>
+                        <td>${(purchase.amount || 0).toFixed(2)}</td>
+                        <td>{purchase.createdAt ? new Date(purchase.createdAt).toLocaleDateString() : 'Recent'}</td>
                         <td>
                           <span className={styles.badgeSuccess} style={{ display: 'inline-block', padding: '0.3rem 0.6rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold' }}>
                             Success
@@ -311,13 +320,14 @@ export default function UserDashboard() {
         {activeTab === 'bookmarks' && (
           <div>
             <div className={styles.header}><h2>Bookmarks</h2></div>
-            {profileData.wishlist?.length === 0 ? (
+            {userWishlist.length === 0 ? (
               <p>No bookmarked ebooks.</p>
             ) : (
               <div className={styles.cardGrid}>
-                {profileData.wishlist.map(ebook => {
-                  const isPurchased = profileData.purchasedEbooks?.some(b => (b._id || b) === ebook._id);
-                  const isWriter = ebook.writer === user._id || ebook.writer?._id === user._id;
+                {userWishlist.map(ebook => {
+                  if (!ebook) return null;
+                  const isPurchased = userPurchasedEbooks.some(b => b && String(b._id || b) === String(ebook._id));
+                  const isWriter = ebook.writer === user?._id || ebook.writer?._id === user?._id;
 
                   return (
                     <Link href={`/ebook/${ebook._id}`} key={ebook._id}>
