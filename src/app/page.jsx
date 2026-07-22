@@ -49,17 +49,16 @@ export default function Home() {
       try {
         // Fetch featured ebooks (limit to 6)
         const ebooksRes = await fetch(`${API_URL}/api/ebooks?limit=6`);
-        const ebooksData = await ebooksRes.json();
         if (ebooksRes.ok) {
-          setFeaturedEbooks(ebooksData.ebooks);
+          const ebooksData = await ebooksRes.json();
+          setFeaturedEbooks(ebooksData.ebooks || []);
         }
 
-        // Fetch top writers (Fetch writers and sort or get from user list)
-        const usersRes = await fetch(`${API_URL}/api/users`);
-        if (usersRes.ok) {
-          const usersData = await usersRes.json();
-          // Filter writers and mock/sort by sales (since database has transaction info)
-          const writers = usersData.filter(u => u.role === 'writer').slice(0, 3);
+        // Fetch top writers using public writers endpoint
+        const writersRes = await fetch(`${API_URL}/api/users/writers`);
+        if (writersRes.ok) {
+          const writersData = await writersRes.json();
+          const writers = (writersData || []).slice(0, 3);
           setTopWriters(writers);
         }
       } catch (err) {
