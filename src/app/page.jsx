@@ -35,6 +35,16 @@ export default function Home() {
     }
   ];
 
+  const genresWithIcons = [
+    { name: 'Fiction', icon: '📚' },
+    { name: 'Mystery', icon: '🔍' },
+    { name: 'Romance', icon: '💖' },
+    { name: 'Sci-Fi', icon: '🚀' },
+    { name: 'Fantasy', icon: '🪄' },
+    { name: 'Horror', icon: '👻' },
+    { name: 'Non-Fiction', icon: '💡' }
+  ];
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -75,32 +85,36 @@ export default function Home() {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
-      transition: { staggerChildren: 0.15 }
+      transition: { staggerChildren: 0.12 }
     }
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } }
+    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 90, damping: 14 } }
   };
 
   return (
-    <div>
-      {/* Hero Section */}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Hero Section Banner Carousel */}
       <section className={styles.heroSection}>
         <motion.div 
           key={currentSlide}
           className={styles.heroContent}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
           <div className={styles.slide}>
             <div className={styles.slideLeft}>
               <h1>{slides[currentSlide].title}</h1>
               <p>{slides[currentSlide].description}</p>
+              
               <Link href={slides[currentSlide].ctaLink} className={styles.ctaBtn}>
-                {slides[currentSlide].ctaText}
+                <span>{slides[currentSlide].ctaText}</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
               </Link>
               
               {/* Carousel Indicators */}
@@ -109,7 +123,7 @@ export default function Home() {
                   <button
                     key={idx}
                     onClick={() => setCurrentSlide(idx)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer ${currentSlide === idx ? 'bg-indigo-600 w-8' : 'bg-gray-300 dark:bg-gray-700'}`}
+                    className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${currentSlide === idx ? 'bg-indigo-600 dark:bg-indigo-400 w-8' : 'bg-gray-300 dark:bg-slate-700 w-2.5'}`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}
@@ -122,7 +136,7 @@ export default function Home() {
                 className={styles.bannerImage}
                 initial={{ rotate: -2, scale: 0.95 }}
                 animate={{ rotate: 0, scale: 1 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.5 }}
               />
             </div>
           </div>
@@ -136,11 +150,10 @@ export default function Home() {
           <div className={styles.grid}>
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div key={item} className={`${styles.card} animate-pulse`}>
-                <div style={{ height: '350px', background: 'var(--border)' }}></div>
+                <div style={{ height: '320px', background: 'rgba(148, 163, 184, 0.2)' }}></div>
                 <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <div style={{ height: '20px', background: 'var(--border)', width: '70%' }}></div>
-                  <div style={{ height: '15px', background: 'var(--border)', width: '40%' }}></div>
-                  <div style={{ height: '20px', background: 'var(--border)', width: '30%', marginTop: '1rem' }}></div>
+                  <div style={{ height: '20px', background: 'rgba(148, 163, 184, 0.2)', width: '70%' }}></div>
+                  <div style={{ height: '15px', background: 'rgba(148, 163, 184, 0.2)', width: '40%' }}></div>
                 </div>
               </div>
             ))}
@@ -156,11 +169,22 @@ export default function Home() {
             {featuredEbooks.map((ebook) => (
               <Link href={`/ebook/${ebook._id}`} key={ebook._id}>
                 <motion.div className={styles.card} variants={itemVariants}>
-                  <img src={ebook.coverImage} alt={ebook.title} className={styles.cardImage} />
+                  <div className={styles.cardImageWrapper}>
+                    <img src={ebook.coverImage} alt={ebook.title} className={styles.cardImage} />
+                    <span className={styles.genreBadge}>{ebook.genre || 'Ebook'}</span>
+                  </div>
                   <div className={styles.cardContent}>
                     <h3 className={styles.cardTitle}>{ebook.title}</h3>
-                    <p className={styles.cardWriter}>By {ebook.writer?.fullName || 'Anonymous'}</p>
-                    <div className={styles.cardPrice}>${ebook.price.toFixed(2)}</div>
+                    <p className={styles.cardWriter}>
+                      <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      {ebook.writer?.fullName || 'Anonymous Writer'}
+                    </p>
+                    <div className={styles.cardFooter}>
+                      <div className={styles.cardPrice}>${(ebook.price || 0).toFixed(2)}</div>
+                      <span className={styles.detailsBtn}>View Details →</span>
+                    </div>
                   </div>
                 </motion.div>
               </Link>
@@ -169,8 +193,8 @@ export default function Home() {
         )}
       </section>
 
-      {/* Top Writers */}
-      <section className={styles.section} style={{ backgroundColor: 'var(--secondary)', borderRadius: '24px', margin: '2rem auto' }}>
+      {/* Top Writers Section */}
+      <section className={styles.topWritersSection}>
         <h2 className={styles.sectionTitle}>Top Writers</h2>
         <motion.div 
           className={styles.grid}
@@ -181,14 +205,19 @@ export default function Home() {
         >
           {topWriters.length > 0 ? (
             topWriters.map((writer) => (
-              <motion.div key={writer._id} className={styles.card} style={{ textAlign: 'center', padding: '2rem', alignItems: 'center' }} variants={itemVariants}>
-                <img 
-                  src={writer.profilePicture || "https://i.ibb.co/Placeholder/avatar.png"} 
-                  alt={writer.fullName} 
-                  style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', marginBottom: '1.5rem', border: '4px solid var(--primary)' }} 
-                />
-                <h3 className={styles.cardTitle}>{writer.fullName}</h3>
-                <p className={styles.cardWriter} style={{ color: 'var(--primary)', fontWeight: 'bold' }}>Writer & Creator</p>
+              <motion.div key={writer._id} className={styles.writerCard} variants={itemVariants}>
+                <div className={styles.writerAvatarWrapper}>
+                  <img 
+                    src={writer.profilePicture || "https://api.dicebear.com/7.x/avataaars/svg?seed=writer"} 
+                    alt={writer.fullName} 
+                    className={styles.writerAvatar}
+                  />
+                  <div className={styles.verifiedBadge} title="Verified Writer">✓</div>
+                </div>
+                <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-1">{writer.fullName}</h3>
+                <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-full">
+                  Published Author & Writer
+                </p>
               </motion.div>
             ))
           ) : (
@@ -207,10 +236,13 @@ export default function Home() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          {['Fiction', 'Mystery', 'Romance', 'Sci-Fi', 'Fantasy', 'Horror', 'Non-Fiction'].map((genre) => (
-            <motion.div key={genre} variants={itemVariants}>
-              <Link href={`/browse?genre=${genre}`}>
-                <div className={styles.genreCard}>{genre}</div>
+          {genresWithIcons.map((item) => (
+            <motion.div key={item.name} variants={itemVariants}>
+              <Link href={`/browse?genre=${item.name}`}>
+                <div className={styles.genreCard}>
+                  <span className={styles.genreIcon}>{item.icon}</span>
+                  <span className="text-gray-900 dark:text-white font-bold">{item.name}</span>
+                </div>
               </Link>
             </motion.div>
           ))}
